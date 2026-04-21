@@ -1,0 +1,51 @@
+openapi: 3.0.3
+info:
+  title: Secure Twitter Monolith API
+  version: 1.0.0
+  description: Monolithic phase built before the serverless refactor.
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/posts:
+    get:
+      summary: Read the public global feed
+      responses:
+        '200':
+          description: Feed returned
+    post:
+      summary: Create a protected short post
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  maxLength: 140
+      responses:
+        '201':
+          description: Post created
+        '400':
+          description: Validation error
+        '401':
+          description: Missing or invalid token
+  /api/me:
+    get:
+      summary: Read the authenticated profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Profile returned
+        '401':
+          description: Missing or invalid token
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

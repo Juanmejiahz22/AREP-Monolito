@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "twitter-secure-monolith",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Public Feed",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8080/api/posts",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api",
+            "posts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Protected Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8080/api/me",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api",
+            "me"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Post",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Hello from Postman\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/posts",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api",
+            "posts"
+          ]
+        }
+      }
+    }
+  ]
+}
