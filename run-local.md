@@ -24,11 +24,12 @@ cp .env.example .env
 The important values are already aligned to the provided configuration:
 
 ```env
-VITE_AUTH0_DOMAIN=dev-4l1jhwzfu73203o3.us.auth0.com
-VITE_AUTH0_CLIENT_ID=SDRKfg7fPnlqw9iuTdXWApwgh7HZqN7r
-VITE_AUTH0_AUDIENCE=https://twitter-api
+VITE_AUTH0_DOMAIN=your-auth0-domain
+VITE_AUTH0_CLIENT_ID=your-auth0-client-id
+VITE_AUTH0_AUDIENCE=your-api-audience
 VITE_AUTH0_REDIRECT_URI=http://localhost:5173
 VITE_API_BASE_URL=http://localhost:8080
+VITE_APP_TITLE=Secure Twitter Monolith
 ```
 
 Then run:
@@ -47,7 +48,7 @@ Frontend URL:
 1. Open the React app.
 2. Login with Auth0.
 3. The frontend requests an access token for audience `https://twitter-api`.
-4. The backend validates the JWT against issuer `https://dev-4l1jhwzfu73203o3.us.auth0.com/` and audience `https://twitter-api`.
+4. The backend validates the JWT against issuer `https://example.us.auth0.com/` and audience `https://twitter-api`.
 5. Public feed works without login.
 6. `/api/me` and post creation require a valid token.
 

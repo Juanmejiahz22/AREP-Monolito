@@ -1,203 +1,259 @@
 # Twitter Secure Monolith
 
-> **Autores:** Juan Jose Mejia & David Castro
+A Twitter-like web application built with a **monolithic architecture**, focused on implementing secure authentication using OAuth2 and JWT. The backend is developed with Spring Boot (Java 21), and the frontend uses React.
 
-Una aplicación tipo Twitter con arquitectura monolítica que implementa patrones de seguridad mediante OAuth2/JWT. Backend en Spring Boot (Java 21) y frontend en React.
+---
 
-## Descripción Rápida
+## Project Overview
 
-Proyecto académico que demuestra: autenticación con Auth0, validación de JWT (issuer + audience), feed público, creación de posts protegida y extracción de perfiles. Monolítico pero escalable a microservicios.
+This academic project demonstrates how to build a secure full-stack application using modern authentication practices. It includes public and protected endpoints, JWT validation (issuer and audience), and a simple in-memory persistence layer.
 
-## Características
+Although implemented as a monolith, the architecture is designed with scalability in mind and can be refactored into microservices.
 
-- OAuth2 con Auth0 + JWT (issuer y audience validados)
-- Feed global público + creación protegida
-- Perfil de usuario desde JWT claims
-- Swagger/OpenAPI para testing
-- Persistencia en memoria (diseño académico)
-- CORS configurado para local y producción
-- Posts limitados a 140 caracteres
-- Manejo centralizado de errores
+---
 
-## Stack
+## Architecture Diagram
 
-- **Backend:** Java 21 + Spring Boot 3.3.5 + Spring Security
-- **Frontend:** React 18.3 + Vite
-- **Auth:** Auth0 (SPA flow)
-- **API Docs:** Swagger/OpenAPI
+![alt text](/images/image-6.png)
+---
 
-## Requisitos
+## API Documentation (Swagger)
 
-- Node.js 18+ y npm
-- Java 21
-- Maven 3.8+
+![alt text](/images/image-1.png)
 
-## Instalación Rápida
+![alt text](/images/image-3.png)
 
-### Backend
+![alt text](/images/image-4.png)
+
+![alt text](/images/image-5.png)
+
+![alt text](/images/image-2.png)
+---
+
+## Getting Started
+
+These instructions will help you set up and run the project locally for development and testing.
+
+---
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+* Java 21
+* Maven 3.8+
+* Node.js 18+
+* npm
+
+---
+
+## Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Juanmejiahz22/AREP-Monolito
+cd twitter-secure-monolith
+```
+
+---
+
+### 2. Run the Backend
+
 ```bash
 cd backend-monolith-springboot
 mvn clean install
 mvn spring-boot:run
 ```
-Backend en: `http://localhost:8080` | Swagger: `http://localhost:8080/swagger-ui.html`
 
-### Frontend
+Backend will be available at:
+ http://localhost:8080
+
+Swagger UI:
+ http://localhost:8080/swagger-ui.html
+
+---
+
+### 3. Run the Frontend
+
 ```bash
 cd frontend-react
 cp .env.example .env
 npm install
 npm run dev
 ```
-Frontend en: `http://localhost:5173`
 
-> Los valores de Auth0 ya están configurados. Solo copia `.env.example` a `.env`.
+Frontend will be available at:
+ http://localhost:5173
 
-## Flujo de Autenticación
+---
 
-1. Usuario hace login en React
-2. Auth0 emite JWT con audience `https://twitter-api`
-3. Frontend envía `Authorization: Bearer <token>`
-4. Backend valida: firma RSA + issuer + audience + timestamp
-5. Sin token → 401 en endpoints protegidos
+### 4. Quick Demo
 
-## Estructura
+* Open the frontend
+* Log in using Auth0
+* View public posts
+* Create a protected post
+* Check your profile information
 
-```
-twitter-secure-monolith/
-├── backend-monolith-springboot/
-│   ├── src/main/java/co/edu/escuelaing/twitterapi/
-│   │   ├── controller/          # REST endpoints
-│   │   ├── service/             # Lógica de negocio
-│   │   ├── repository/          # Acceso a datos (in-memory)
-│   │   ├── security/            # AudienceValidator
-│   │   └── config/              # Security + OpenAPI
-│   ├── src/test/java/           # Tests
-│   └── pom.xml
-│
-├── frontend-react/
-│   ├── src/
-│   │   ├── components/          # AuthBar, Feed, CreatePostForm, etc.
-│   │   ├── services/api.js      # Cliente HTTP
-│   │   ├── App.jsx
-│   │   └── styles.css
-│   ├── .env.example
-│   └── package.json
-│
-└── README.md
-```
+---
+
+## Authentication Flow
+
+1. User logs in via React frontend
+2. Auth0 issues a JWT with audience `https://twitter-api`
+3. Frontend sends the token in the `Authorization` header
+4. Backend validates:
+
+   * RSA signature
+   * Issuer
+   * Audience
+   * Token expiration
+5. Protected endpoints reject requests without valid tokens (401)
+
+---
 
 ## API Endpoints
 
-### Públicos
-- `GET /api/posts` → Feed global
+### Public
 
-### Protegidos (requieren JWT)
-- `POST /api/posts` → Crear post (`{"message": "..."}`)
-- `GET /api/me` → Perfil del usuario
+* `GET /api/posts` → Retrieve global feed
 
-**Swagger:** `http://localhost:8080/swagger-ui.html`
+### Protected (JWT required)
 
-### Ejemplos
+* `POST /api/posts` → Create a post (`{"message": "..."}`)
+* `GET /api/me` → Retrieve user profile
+
+### Example Requests
 
 ```bash
-# Feed público
+# Public feed
 curl http://localhost:8080/api/posts
 
-# Crear post (necesita token)
+# Create post (requires token)
 curl -X POST http://localhost:8080/api/posts \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
-  -d '{"message": "Mi primer post"}'
+  -d '{"message": "My first post"}'
 
-# Perfil (necesita token)
+# Get profile (requires token)
 curl http://localhost:8080/api/me \
   -H "Authorization: Bearer <token>"
 ```
 
-## Seguridad
+---
 
-- **JWT Validation:** Firma RSA + issuer (`https://dev-4l1jhwzfu73203o3.us.auth0.com/`) + audience (`https://twitter-api`)
-- **CORS:** Acepta `localhost:5173` (dev) y `production.d3bbro1qxkh12x.amplifyapp.com` (prod)
-- **Endpoints sin protección:** GET /api/posts, GET /swagger-ui.html, OPTIONS
-- **Endpoints protegidos:** POST /api/posts, GET /api/me
+## Running the Tests
 
-## Testing
+### Backend Tests
 
 ```bash
 cd backend-monolith-springboot
 mvn test
 ```
 
-**Tests incluidos:**
-- `PostServiceTest` → Lógica de posts
-- `ProfileServiceTest` → Extracción de JWT claims
-- `AudienceValidatorTest` → Validación de audience
-- `PostControllerIntegrationTest` → Endpoints públicos y protegidos (401, 400)
-- `ProfileControllerIntegrationTest` → GET /me con/sin token
+### What is Tested?
 
-## Configuración
+* Business logic (post creation, validation)
+* JWT claim extraction
+* Audience validation
+* Public vs protected endpoints
+* Error handling (400, 401)
 
-### Backend (application.yml)
-```yaml
-server:
-  port: 5000
+### Example Test Cases
 
-auth0:
-  issuer-uri: https://dev-4l1jhwzfu73203o3.us.auth0.com/
-  audience: https://twitter-api
-  frontend-local-url: http://localhost:5173
-  frontend-prod-url: https://production.d3bbro1qxkh12x.amplifyapp.com
-```
+* `PostServiceTest` → Post logic validation
+* `ProfileServiceTest` → JWT claim extraction
+* `AudienceValidatorTest` → Token audience validation
+* Integration tests for controllers
 
-### Frontend (.env)
-```
-VITE_AUTH0_DOMAIN=dev-4l1jhwzfu73203o3.us.auth0.com
-VITE_AUTH0_CLIENT_ID=SDRKfg7fPnlqw9iuTdXWApwgh7HZqN7r
-VITE_AUTH0_AUDIENCE=https://twitter-api
-VITE_AUTH0_REDIRECT_URI=http://localhost:5173
-VITE_API_BASE_URL=http://localhost:8080
-```
+---
 
-## Persistencia
-
-Los posts se guardan en memoria (`CopyOnWriteArrayList`). Al reiniciar el servidor, se pierden. Es intencional para desarrollo local sin base de datos. En producción se reemplazaría con DynamoDB o PostgreSQL.
-
-## Build & Deployment
+##  Deployment
 
 ### Backend
+
 ```bash
 mvn clean package
 java -jar target/twitter-api-1.0.0.jar
 ```
 
 ### Frontend
+
 ```bash
 npm run build
-# Genera dist/ → Subir a S3 o Amplify
 ```
 
-## Próximas Fases
+Deploy the `dist/` folder to services like:
 
-- Base de datos real (PostgreSQL / DynamoDB)
-- Refactor a microservicios (Lambda + API Gateway)
-- Cache (Redis)
-- Búsqueda (Elasticsearch)
-- Real-time updates (WebSockets)
-
-## Troubleshooting
-
-| Problema | Solución |
-|----------|----------|
-| Frontend no conecta al backend | Verifica que backend corra en `http://localhost:8080` |
-| "Audience mismatch" error | Comprueba que Auth0 use audience `https://twitter-api` |
-| Posts no persisten tras restart | Comportamiento normal. Usa in-memory. |
-| Tests fallan | Usa Java 21+, ejecuta `mvn clean install` |
-
-## Licencia
-
-MIT
+* AWS S3
 
 ---
 
-**Para más información:** Ver `run-local.md` y `tests-report.md`
+## Built With
+
+* **Spring Boot** – Backend framework
+* **Spring Security** – Authentication & authorization
+* **React** – Frontend library
+* **Vite** – Frontend build tool
+* **Auth0** – Authentication provider
+* **Swagger/OpenAPI** – API documentation
+
+---
+
+## Contributing
+
+Please read `CONTRIBUTING.md` for details about:
+
+* Code of conduct
+* Pull request process
+
+---
+
+## Versioning
+
+This project follows **Semantic Versioning (SemVer)**.
+Check repository tags for available versions.
+
+---
+
+##  Authors
+
+* Juan José Mejía
+* David Santiago Castro
+
+---
+
+## License
+
+This project is licensed under the MIT License. See `LICENSE.md` for details.
+
+---
+
+## Acknowledgments
+
+* Inspiration from modern secure web architectures
+* Thanks to open-source tools and libraries used in this project
+
+---
+
+## Troubleshooting
+
+| Issue                         | Solution                                             |
+| ----------------------------- | ---------------------------------------------------- |
+| Frontend cannot reach backend | Ensure backend is running on `http://localhost:8080` |
+| "Audience mismatch" error     | Verify Auth0 audience is `https://twitter-api`       |
+| Data not persisted            | This is expected (in-memory storage)                 |
+| Tests failing                 | Ensure Java 21 and run `mvn clean install`           |
+
+---
+
+## Future Improvements
+
+* Replace in-memory storage with a real database (PostgreSQL / DynamoDB)
+* Migrate to microservices architecture
+* Add caching layer (Redis)
+* Implement search (Elasticsearch)
+* Enable real-time updates (WebSockets)
+
+---
