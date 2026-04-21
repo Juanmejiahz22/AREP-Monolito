@@ -1,8 +1,6 @@
----
-**Autores:** Juan Jose Mejia & David Castro
----
-
 # Twitter Secure Monolith
+
+> **Autores:** Juan Jose Mejia & David Castro
 
 Una aplicación tipo Twitter con arquitectura monolítica que implementa patrones de seguridad mediante OAuth2/JWT. Backend en Spring Boot (Java 21) y frontend en React.
 
