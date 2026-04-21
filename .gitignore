@@ -1,38 +1,47 @@
+### Backend (Spring Boot) ###
 HELP.md
 target/
+.mvn/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-.env
+backend-monolith-springboot/src/main/resources/application.yml
 
-### STS ###
-.apt_generated
+### Frontend (React + Node) ###
+frontend-react/node_modules/
+frontend-react/dist/
+frontend-react/.env
+frontend-react/.env.production
+frontend-react/.env.local
+
+### General ###
+.env
+.env.local
+.env.*.local
+
+### IDE ###
+.idea
+.vscode/
+*.iws
+*.iml
+*.ipr
 .classpath
 .factorypath
 .project
 .settings
 .springBeans
 .sts4-cache
+.apt_generated
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+### OS ###
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+### Build artifacts ###
 build/
+dist/
+.cache/
 !**/src/main/**/build/
 !**/src/test/**/build/
-
-### VS Code ###
-.vscode/
-
-backend-monolith-springboot/src/main/resources/application.yml
-frontend-react/.env
-frontend-react/.env.production
