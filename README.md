@@ -168,6 +168,10 @@ mvn test
 * Integration tests for controllers
 
 ---
+## Demonstration video
+If the video doesn't play for any reason, please contact us and we'll look into it
+
+https://drive.google.com/file/d/1Wu02W9s8GxpPPUWPcsa2KHg8-AyUsNRE/view?usp=sharing
 
 ##  Deployment
 
